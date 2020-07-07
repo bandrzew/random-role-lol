@@ -24,6 +24,13 @@ public class Champion {
 	@OneToMany(mappedBy = "champion", fetch = FetchType.LAZY)
 	private Set<ChampionToRole> roles;
 
+	public Champion() {
+	}
+
+	public Champion(String name) {
+		this.name = name;
+	}
+
 	public int getId() {
 		return id;
 	}
