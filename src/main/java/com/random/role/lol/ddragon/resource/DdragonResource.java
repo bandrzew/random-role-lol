@@ -1,6 +1,6 @@
-package com.random.role.lol.resource;
+package com.random.role.lol.ddragon.resource;
 
-import com.random.role.lol.dto.DdragonResponse;
+import com.random.role.lol.ddragon.dto.DdragonResponse;
 import java.util.List;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;

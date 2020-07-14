@@ -1,4 +1,4 @@
-package com.random.role.lol.client;
+package com.random.role.lol.common.client;
 
 import java.util.concurrent.TimeUnit;
 import javax.annotation.PostConstruct;

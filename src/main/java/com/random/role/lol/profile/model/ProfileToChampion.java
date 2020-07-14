@@ -1,5 +1,7 @@
-package com.random.role.lol.model;
+package com.random.role.lol.profile.model;
 
+import com.random.role.lol.champion.model.Champion;
+import com.random.role.lol.champion.model.Role;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -13,12 +15,16 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "champion_to_role")
-public class ChampionToRole {
+@Table(name = "profile_to_champion")
+public class ProfileToChampion {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "profile_id", nullable = false)
+	private Profile profile;
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "champion_id", nullable = false)
@@ -28,19 +34,20 @@ public class ChampionToRole {
 	@Column(nullable = false)
 	private Role role;
 
-	@Column(name = "win_rate")
-	private int winRate;
-
-	@Enumerated(EnumType.STRING)
-	@Column(nullable = false)
-	private Tier tier;
-
 	public int getId() {
 		return id;
 	}
 
 	public void setId(int id) {
 		this.id = id;
+	}
+
+	public Profile getProfile() {
+		return profile;
+	}
+
+	public void setProfile(Profile profile) {
+		this.profile = profile;
 	}
 
 	public Champion getChampion() {
@@ -57,22 +64,6 @@ public class ChampionToRole {
 
 	public void setRole(Role role) {
 		this.role = role;
-	}
-
-	public int getWinRate() {
-		return winRate;
-	}
-
-	public void setWinRate(int winRate) {
-		this.winRate = winRate;
-	}
-
-	public Tier getTier() {
-		return tier;
-	}
-
-	public void setTier(Tier tier) {
-		this.tier = tier;
 	}
 
 }

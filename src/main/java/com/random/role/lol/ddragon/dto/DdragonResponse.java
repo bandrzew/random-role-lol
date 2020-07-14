@@ -1,4 +1,4 @@
-package com.random.role.lol.dto;
+package com.random.role.lol.ddragon.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -13,7 +13,7 @@ public class DdragonResponse implements Serializable {
 
 	private String version;
 
-	private Map<String, ChampionDto> data;
+	private Map<String, DdragonChampionDto> data;
 
 	public DdragonResponse() {
 	}
@@ -26,11 +26,11 @@ public class DdragonResponse implements Serializable {
 		this.version = version;
 	}
 
-	public Map<String, ChampionDto> getData() {
+	public Map<String, DdragonChampionDto> getData() {
 		return data;
 	}
 
-	public void setData(Map<String, ChampionDto> data) {
+	public void setData(Map<String, DdragonChampionDto> data) {
 		this.data = data;
 	}
 

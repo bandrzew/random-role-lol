@@ -1,6 +1,7 @@
-package com.random.role.lol.client;
+package com.random.role.lol.ddragon.client;
 
-import com.random.role.lol.resource.DdragonResource;
+import com.random.role.lol.common.client.Client;
+import com.random.role.lol.ddragon.resource.DdragonResource;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import org.jboss.resteasy.client.jaxrs.ResteasyWebTarget;

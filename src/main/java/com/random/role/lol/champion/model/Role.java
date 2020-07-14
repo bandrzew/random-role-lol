@@ -1,4 +1,4 @@
-package com.random.role.lol.model;
+package com.random.role.lol.champion.model;
 
 import java.util.Set;
 

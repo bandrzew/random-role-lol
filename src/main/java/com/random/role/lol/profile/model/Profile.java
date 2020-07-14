@@ -1,4 +1,4 @@
-package com.random.role.lol.model;
+package com.random.role.lol.profile.model;
 
 import java.util.Set;
 import javax.persistence.Column;
@@ -26,6 +26,13 @@ public class Profile {
 
 	@OneToMany(mappedBy = "profile", fetch = FetchType.LAZY)
 	private Set<ProfileToChampion> champions;
+
+	public Profile() {
+	}
+
+	public Profile(String name) {
+		this.name = name;
+	}
 
 	public int getId() {
 		return id;

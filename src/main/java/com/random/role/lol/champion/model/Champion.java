@@ -1,4 +1,4 @@
-package com.random.role.lol.model;
+package com.random.role.lol.champion.model;
 
 import java.util.Set;
 import javax.persistence.Column;
@@ -21,14 +21,15 @@ public class Champion {
 	@Column(nullable = false)
 	private String name;
 
+	private String displayName;
+
+	@Column(nullable = false)
+	private int key;
+
 	@OneToMany(mappedBy = "champion", fetch = FetchType.LAZY)
 	private Set<ChampionToRole> roles;
 
 	public Champion() {
-	}
-
-	public Champion(String name) {
-		this.name = name;
 	}
 
 	public int getId() {
@@ -45,6 +46,22 @@ public class Champion {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	public String getDisplayName() {
+		return displayName;
+	}
+
+	public void setDisplayName(String displayName) {
+		this.displayName = displayName;
+	}
+
+	public int getKey() {
+		return key;
+	}
+
+	public void setKey(int key) {
+		this.key = key;
 	}
 
 	public Set<ChampionToRole> getRoles() {
