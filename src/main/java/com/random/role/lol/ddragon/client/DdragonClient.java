@@ -14,18 +14,6 @@ public class DdragonClient extends Client {
 	@Value("${ddragon.url}")
 	private String url;
 
-	@Override
-	@PostConstruct
-	public void init() {
-		super.init();
-	}
-
-	@Override
-	@PreDestroy
-	public void destroy() {
-		super.destroy();
-	}
-
 	public DdragonResource getDdragonResource() {
 		return proxy(DdragonResource.class);
 	}

@@ -1,12 +1,22 @@
 package com.random.role.lol.ddragon.service;
 
+import static com.random.role.lol.profile.model.SpecialProfile.ProfileType.ALL_CHAMPIONS;
+import static java.util.stream.Collectors.toSet;
+
 import com.random.role.lol.champion.model.Champion;
+import com.random.role.lol.champion.model.Role;
 import com.random.role.lol.champion.repository.ChampionRepository;
 import com.random.role.lol.ddragon.client.DdragonClient;
+import com.random.role.lol.ddragon.dto.DdragonChampionDto;
 import com.random.role.lol.ddragon.resource.DdragonResource;
+import com.random.role.lol.profile.model.ProfileToChampion;
+import com.random.role.lol.profile.model.SpecialProfile;
+import com.random.role.lol.profile.service.ProfileService;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import org.apache.logging.log4j.util.Strings;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,20 +28,47 @@ public class DdragonService {
 
 	private final DdragonResource ddragonResource;
 
+	private final ProfileService profileService;
+
 	@Autowired
-	public DdragonService(ChampionRepository championRepository, DdragonClient ddragonClient) {
+	public DdragonService(ChampionRepository championRepository, DdragonClient ddragonClient, ProfileService profileService) {
 		this.championRepository = championRepository;
 		this.ddragonResource = ddragonClient.getDdragonResource();
+		this.profileService = profileService;
 	}
 
 	public void importChampions() {
-		ddragonResource.getChampions(getMostRecentVersion()).getData().forEach((championName, importChampion) -> {
-			Champion champion = championRepository.findByName(championName).orElseGet(Champion::new);
-			champion.setName(championName);
-			champion.setDisplayName(importChampion.getName());
-			champion.setKey(Integer.parseInt(importChampion.getKey()));
-			championRepository.save(champion);
-		});
+		SpecialProfile allChampionsProfile = profileService.getSpecial(ALL_CHAMPIONS).orElseGet(this::createSpecialProfile);
+		Set<Integer> existingChampionIds = profileService.listChampions(allChampionsProfile)
+				.stream()
+				.map(ProfileToChampion::getChampion)
+				.map(Champion::getId)
+				.collect(toSet());
+
+		ddragonResource.getChampions(getMostRecentVersion())
+				.getData()
+				.entrySet()
+				.stream()
+				.map(this::updateChampion)
+				.filter(champion -> !existingChampionIds.contains(champion.getId()))
+				.forEach(champion -> Role.POSITIONS.forEach(role -> profileService.addChampion(allChampionsProfile, champion, role)));
+	}
+
+	private SpecialProfile createSpecialProfile() {
+		SpecialProfile specialProfile = new SpecialProfile();
+		specialProfile.setProfileType(ALL_CHAMPIONS);
+		specialProfile.setRemovalRestricted(true);
+		specialProfile.setName(ALL_CHAMPIONS.name());
+		return profileService.save(specialProfile);
+	}
+
+	private Champion updateChampion(Map.Entry<String, DdragonChampionDto> nameToChampion) {
+		Champion champion = championRepository.findByName(nameToChampion.getKey()).orElseGet(Champion::new);
+		champion.setName(nameToChampion.getKey());
+		champion.setDisplayName(nameToChampion.getValue().getName());
+		champion.setKey(Integer.parseInt(nameToChampion.getValue().getKey()));
+
+		return championRepository.save(champion);
 	}
 
 	private String getMostRecentVersion() {

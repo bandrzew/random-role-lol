@@ -16,7 +16,7 @@ public class ProfileSerializer {
 		return profileDto;
 	}
 
-	public static ProfileToChampionDto fromProfileToChampion(ProfileToChampion profileToChampion){
+	public static ProfileToChampionDto fromProfileToChampion(ProfileToChampion profileToChampion) {
 		ProfileToChampionDto profileToChampionDto = new ProfileToChampionDto();
 		profileToChampionDto.setProfile(fromProfile(profileToChampion.getProfile()));
 		profileToChampionDto.setChampion(ChampionSerializer.toDto(profileToChampion.getChampion()));
