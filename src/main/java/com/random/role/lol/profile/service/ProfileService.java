@@ -4,10 +4,11 @@ import com.random.role.lol.champion.model.Champion;
 import com.random.role.lol.champion.model.Role;
 import com.random.role.lol.profile.model.Profile;
 import com.random.role.lol.profile.model.ProfileToChampion;
+import com.random.role.lol.profile.model.ProfileType;
 import com.random.role.lol.profile.model.SpecialProfile;
 import com.random.role.lol.profile.repository.ProfileToChampionRepository;
 import com.random.role.lol.profile.repository.SpecialProfileRepository;
-import com.random.role.lol.randomizer.Random;
+import com.random.role.lol.common.randomizer.Random;
 import java.util.List;
 import java.util.Optional;
 import javax.persistence.EntityManager;
@@ -42,7 +43,11 @@ public class ProfileService {
 		return profile;
 	}
 
-	public Optional<SpecialProfile> getSpecial(SpecialProfile.ProfileType profileType) {
+	public Profile get(int id){
+		return em.find(Profile.class, id);
+	}
+
+	public Optional<SpecialProfile> getSpecial(ProfileType profileType) {
 		return specialProfileRepository.findByProfileType(profileType);
 	}
 

@@ -1,6 +1,5 @@
 package com.random.role.lol.ddragon.service;
 
-import static com.random.role.lol.profile.model.SpecialProfile.ProfileType.ALL_CHAMPIONS;
 import static java.util.stream.Collectors.toSet;
 
 import com.random.role.lol.champion.model.Champion;
@@ -10,6 +9,7 @@ import com.random.role.lol.ddragon.client.DdragonClient;
 import com.random.role.lol.ddragon.dto.DdragonChampionDto;
 import com.random.role.lol.ddragon.resource.DdragonResource;
 import com.random.role.lol.profile.model.ProfileToChampion;
+import com.random.role.lol.profile.model.ProfileType;
 import com.random.role.lol.profile.model.SpecialProfile;
 import com.random.role.lol.profile.service.ProfileService;
 import java.util.Iterator;
@@ -38,7 +38,7 @@ public class DdragonService {
 	}
 
 	public void importChampions() {
-		SpecialProfile allChampionsProfile = profileService.getSpecial(ALL_CHAMPIONS).orElseGet(this::createSpecialProfile);
+		SpecialProfile allChampionsProfile = profileService.getSpecial(ProfileType.ALL_CHAMPIONS).orElseGet(this::createSpecialProfile);
 		Set<Integer> existingChampionIds = profileService.listChampions(allChampionsProfile)
 				.stream()
 				.map(ProfileToChampion::getChampion)
@@ -56,9 +56,9 @@ public class DdragonService {
 
 	private SpecialProfile createSpecialProfile() {
 		SpecialProfile specialProfile = new SpecialProfile();
-		specialProfile.setProfileType(ALL_CHAMPIONS);
+		specialProfile.setProfileType(ProfileType.ALL_CHAMPIONS);
 		specialProfile.setRemovalRestricted(true);
-		specialProfile.setName(ALL_CHAMPIONS.name());
+		specialProfile.setName(ProfileType.ALL_CHAMPIONS.getName());
 		return profileService.save(specialProfile);
 	}
 

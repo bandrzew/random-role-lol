@@ -5,6 +5,7 @@ import com.random.role.lol.profile.dto.ProfileDto;
 import com.random.role.lol.profile.dto.ProfileToChampionDto;
 import com.random.role.lol.profile.model.Profile;
 import com.random.role.lol.profile.model.ProfileToChampion;
+import com.random.role.lol.profile.model.SpecialProfile;
 
 public class ProfileSerializer {
 
@@ -12,6 +13,8 @@ public class ProfileSerializer {
 		ProfileDto profileDto = new ProfileDto();
 		profileDto.setId(profile.getId());
 		profileDto.setName(profile.getName());
+		if (profile instanceof SpecialProfile)
+			profileDto.setDescription(((SpecialProfile) profile).getProfileType().getDescription());
 
 		return profileDto;
 	}

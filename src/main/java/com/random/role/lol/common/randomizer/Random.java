@@ -1,4 +1,6 @@
-package com.random.role.lol.randomizer;
+package com.random.role.lol.common.randomizer;
+
+import static java.util.Collections.singleton;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -9,7 +11,11 @@ import java.util.concurrent.ThreadLocalRandom;
 public class Random {
 
 	public static <T> T collectionElement(Collection<T> elements) {
-		return collectionElement(elements, null);
+		return collectionElement(elements, (T) null);
+	}
+
+	public static <T> T collectionElement(Collection<T> elements, T excluded) {
+		return collectionElement(elements, singleton(excluded));
 	}
 
 	public static <T> T collectionElement(Collection<T> elements, Collection<T> excluded) {

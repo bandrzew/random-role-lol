@@ -13,10 +13,6 @@ import javax.persistence.Table;
 @PrimaryKeyJoinColumns({ @PrimaryKeyJoinColumn(name = "profile_id", referencedColumnName = "id") })
 public class SpecialProfile extends Profile {
 
-	public enum ProfileType {
-		ALL_CHAMPIONS, FREE_ROTATION
-	}
-
 	@Enumerated(EnumType.STRING)
 	@Column(name = "profile_type", nullable = false, unique = true)
 	private ProfileType profileType;
