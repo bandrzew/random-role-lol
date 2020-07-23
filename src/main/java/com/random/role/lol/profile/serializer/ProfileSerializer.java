@@ -22,7 +22,7 @@ public class ProfileSerializer {
 	public static ProfileToChampionDto fromProfileToChampion(ProfileToChampion profileToChampion) {
 		ProfileToChampionDto profileToChampionDto = new ProfileToChampionDto();
 		profileToChampionDto.setProfile(fromProfile(profileToChampion.getProfile()));
-		profileToChampionDto.setChampion(ChampionSerializer.toDto(profileToChampion.getChampion()));
+		profileToChampionDto.setChampion(ChampionSerializer.base(profileToChampion.getChampion()));
 		profileToChampionDto.setRole(profileToChampion.getRole());
 
 		return profileToChampionDto;

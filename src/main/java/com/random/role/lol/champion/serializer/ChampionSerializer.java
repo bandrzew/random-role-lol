@@ -5,14 +5,15 @@ import com.random.role.lol.champion.dto.RoleToChampionDto;
 import com.random.role.lol.champion.model.Champion;
 import com.random.role.lol.champion.model.Role;
 import com.random.role.lol.profile.model.ProfileToChampion;
+import java.util.Optional;
 
 public class ChampionSerializer {
 
-	public static ChampionDto toDto(Champion champion) {
+	public static ChampionDto base(Champion champion) {
 		ChampionDto championDto = new ChampionDto();
 		championDto.setId(champion.getId());
 		championDto.setKey(champion.getKey());
-		championDto.setName(champion.getName());
+		championDto.setName(Optional.ofNullable(champion.getDisplayName()).orElse(champion.getName()));
 
 		return championDto;
 	}
@@ -24,7 +25,7 @@ public class ChampionSerializer {
 	public static RoleToChampionDto fromRoleAndChampion(Role role, Champion champion) {
 		RoleToChampionDto roleToChampionDto = new RoleToChampionDto();
 		roleToChampionDto.setRole(role);
-		roleToChampionDto.setChampion(toDto(champion));
+		roleToChampionDto.setChampion(base(champion));
 
 		return roleToChampionDto;
 	}

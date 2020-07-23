@@ -2,13 +2,14 @@ package com.random.role.lol.profile.service;
 
 import com.random.role.lol.champion.model.Champion;
 import com.random.role.lol.champion.model.Role;
+import com.random.role.lol.common.randomizer.Random;
 import com.random.role.lol.profile.model.Profile;
 import com.random.role.lol.profile.model.ProfileToChampion;
 import com.random.role.lol.profile.model.ProfileType;
 import com.random.role.lol.profile.model.SpecialProfile;
+import com.random.role.lol.profile.repository.ProfileRepository;
 import com.random.role.lol.profile.repository.ProfileToChampionRepository;
 import com.random.role.lol.profile.repository.SpecialProfileRepository;
-import com.random.role.lol.common.randomizer.Random;
 import java.util.List;
 import java.util.Optional;
 import javax.persistence.EntityManager;
@@ -22,16 +23,23 @@ public class ProfileService {
 
 	private final EntityManager em;
 
+	private final ProfileRepository profileRepository;
+
 	private final SpecialProfileRepository specialProfileRepository;
 
 	private final ProfileToChampionRepository profileToChampionRepository;
 
 	@Autowired
-	public ProfileService(EntityManager em, SpecialProfileRepository specialProfileRepository,
+	public ProfileService(EntityManager em, ProfileRepository profileRepository, SpecialProfileRepository specialProfileRepository,
 			ProfileToChampionRepository profileToChampionRepository) {
 		this.em = em;
+		this.profileRepository = profileRepository;
 		this.specialProfileRepository = specialProfileRepository;
 		this.profileToChampionRepository = profileToChampionRepository;
+	}
+
+	public List<Profile> list() {
+		return profileRepository.findAll();
 	}
 
 	public Profile create(String profileName) {
@@ -43,8 +51,21 @@ public class ProfileService {
 		return profile;
 	}
 
-	public Profile get(int id){
-		return em.find(Profile.class, id);
+	public Optional<Profile> get(int id) {
+		return Optional.ofNullable(em.find(Profile.class, id));
+	}
+
+	public Optional<Profile> edit(int id, Profile inputProfile) {
+		return profileRepository.findById(id).map(profile -> {
+			profile.setName(inputProfile.getName());
+			return profile;
+		}).map(profileRepository::save);
+	}
+
+	public boolean delete(int id) {
+		Optional<Profile> profile = profileRepository.findById(id);
+		profile.ifPresent(profileRepository::delete);
+		return profile.isPresent();
 	}
 
 	public Optional<SpecialProfile> getSpecial(ProfileType profileType) {
