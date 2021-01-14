@@ -13,9 +13,10 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 
 @Entity
-@Table(name = "profile_to_champion")
+@Table(name = "profile_to_champion", uniqueConstraints = { @UniqueConstraint(columnNames = {"profile_id", "champion_id", "role"}) })
 public class ProfileToChampion {
 
 	@Id

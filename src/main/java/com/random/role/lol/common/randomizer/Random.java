@@ -21,10 +21,16 @@ public class Random {
 	public static <T> T collectionElement(Collection<T> elements, Collection<T> excluded) {
 		List<T> list = new ArrayList<>(elements);
 		Optional.ofNullable(excluded).ifPresent(list::removeAll);
+		if (list.isEmpty())
+			return null;
+
 		return list.get(integer(list.size()));
 	}
 
 	private static int integer(int bound) {
+		if (bound <= 0)
+			return 0;
+
 		return ThreadLocalRandom.current().nextInt(0, bound);
 	}
 

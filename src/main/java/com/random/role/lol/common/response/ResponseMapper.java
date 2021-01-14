@@ -9,6 +9,10 @@ public class ResponseMapper {
 		return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 	}
 
+	public static <T> ResponseEntity<T> noContent(T dto) {
+		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+	}
+
 	public static <T> ResponseEntity<T> ok(T dto) {
 		return new ResponseEntity<>(dto, HttpStatus.OK);
 	}

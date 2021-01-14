@@ -1,8 +1,11 @@
 package com.random.role.lol.profile.controller;
 
 import static java.util.Collections.singletonMap;
+import static java.util.stream.Collectors.groupingBy;
 import static java.util.stream.Collectors.toList;
+import static java.util.stream.Collectors.toMap;
 
+import com.random.role.lol.champion.dto.ChampionDto;
 import com.random.role.lol.champion.dto.RoleToChampionDto;
 import com.random.role.lol.champion.model.Role;
 import com.random.role.lol.champion.serializer.ChampionSerializer;
@@ -15,7 +18,11 @@ import com.random.role.lol.profile.dto.ProfileToChampionDto;
 import com.random.role.lol.profile.model.Profile;
 import com.random.role.lol.profile.serializer.ProfileSerializer;
 import com.random.role.lol.profile.service.ProfileService;
+import java.util.AbstractMap;
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -59,30 +66,58 @@ public class ProfileController {
 
 	@PostMapping("{id}")
 	public ResponseEntity<ProfileDto> edit(@PathVariable("id") int id, @RequestBody ProfileDto profileDto) {
-		return profileService.edit(id, ProfileDeserializer.fromDto(profileDto))
+		return profileService.edit(id, ProfileDeserializer.toProfile(profileDto))
 				.map(ProfileSerializer::fromProfile)
 				.map(ResponseMapper::ok)
 				.orElseGet(ResponseMapper::notFound);
 	}
 
 	@DeleteMapping("{id}")
-	public ResponseEntity<ProfileDto> delete(@PathVariable("id") int id) {
-		return new ResponseEntity<>(profileService.delete(id) ? HttpStatus.NO_CONTENT : HttpStatus.NOT_FOUND);
+	public ResponseEntity<Object> delete(@PathVariable("id") int id) {
+		return profileService.get(id).map(profile -> {
+			if (profile.isRemovalRestricted())
+				return HttpStatus.FORBIDDEN;
+
+			profileService.delete(profile);
+			return HttpStatus.NO_CONTENT;
+		}).map(ResponseEntity::new).orElseGet(ResponseMapper::notFound);
 	}
 
+	// TODO: split into 2nd controller
+
 	@GetMapping("{id}/champions")
-	public List<ProfileToChampionDto> listChampions(@PathVariable("id") int id) {
-		return profileService.listChampions(id).stream().map(ProfileSerializer::fromProfileToChampion).collect(toList());
+	public Map<Role, List<ChampionDto>> listChampions(@PathVariable("id") int id) {
+		// TODO REFACTOR: groupingBy with value mapper (?)
+		return profileService.get(id)
+				.map(profileService::listChampions)
+				.orElseGet(Collections::emptyList)
+				.stream()
+				.map(ProfileSerializer::fromProfileToChampion)
+				.collect(groupingBy(ProfileToChampionDto::getRole))
+				.entrySet()
+				.stream()
+				.map(entry -> new AbstractMap.SimpleEntry<>(entry.getKey(),
+						entry.getValue().stream().map(ProfileToChampionDto::getChampion).collect(toList())))
+				.collect(toMap(Map.Entry::getKey, Map.Entry::getValue));
 	}
 
 	@PutMapping("{id}/champions")
-	public void addChampion(@PathVariable int id, @RequestBody ProfileToChampionDto profileToChampionDto) {
-		profileService.addChampion(id, profileToChampionDto.getChampion().getId(), profileToChampionDto.getRole());
+	public ResponseEntity<ProfileToChampionDto> addChampion(@PathVariable int id, @RequestBody ProfileToChampionDto profileToChampionDto) {
+		return profileService.addChampion(id, ProfileDeserializer.fromDto(profileToChampionDto))
+				.map(ProfileSerializer::fromProfileToChampion)
+				.map(ResponseMapper::noContent)
+				.orElseGet(ResponseMapper::notFound);
 	}
 
-	@GetMapping("{id}/champions/{role}")
-	public List<ProfileToChampionDto> listChampionsByRole(@PathVariable int id, @PathVariable Role role) {
-		return profileService.listChampionsByRole(id, role).stream().map(ProfileSerializer::fromProfileToChampion).collect(toList());
+	@DeleteMapping("{id}/champions")
+	public ResponseEntity<Object> removeChampion(@PathVariable int id, @RequestBody ProfileToChampionDto profileToChampionDto) {
+		return profileService.get(id).map(profile -> {
+			if (profile.isRemovalRestricted())
+				return HttpStatus.FORBIDDEN;
+
+			profileService.removeChampion(profile, ProfileDeserializer.fromDto(profileToChampionDto));
+			return HttpStatus.NO_CONTENT;
+		}).map(ResponseEntity::new).orElseGet(ResponseMapper::notFound);
 	}
 
 	@GetMapping("{id}/random")
@@ -113,6 +148,7 @@ public class ProfileController {
 				.filter(roles::contains)
 				.filter(role -> role != excludedRole)
 				.map(role -> profileService.getRandomChampion(id, role))
+				.filter(Objects::nonNull)
 				.map(profileToChampion -> ChampionSerializer.fromRoleAndChampion(profileToChampion.getRole(),
 						profileToChampion.getChampion()))
 				.collect(toList());

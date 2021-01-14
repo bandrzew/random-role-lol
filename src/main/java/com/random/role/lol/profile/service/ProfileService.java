@@ -42,6 +42,10 @@ public class ProfileService {
 		return profileRepository.findAll();
 	}
 
+	public Optional<Profile> get(int id) {
+		return Optional.ofNullable(em.find(Profile.class, id));
+	}
+
 	public Profile create(String profileName) {
 		return save(new Profile(profileName));
 	}
@@ -51,10 +55,6 @@ public class ProfileService {
 		return profile;
 	}
 
-	public Optional<Profile> get(int id) {
-		return Optional.ofNullable(em.find(Profile.class, id));
-	}
-
 	public Optional<Profile> edit(int id, Profile inputProfile) {
 		return profileRepository.findById(id).map(profile -> {
 			profile.setName(inputProfile.getName());
@@ -62,49 +62,52 @@ public class ProfileService {
 		}).map(profileRepository::save);
 	}
 
-	public boolean delete(int id) {
-		Optional<Profile> profile = profileRepository.findById(id);
-		profile.ifPresent(profileRepository::delete);
-		return profile.isPresent();
+	public void delete(Profile profile) {
+		profileRepository.delete(profile);
 	}
 
 	public Optional<SpecialProfile> getSpecial(ProfileType profileType) {
 		return specialProfileRepository.findByProfileType(profileType);
 	}
 
-	public List<ProfileToChampion> listChampions(int id) {
-		return listChampions(em.getReference(Profile.class, id));
-	}
+	// TODO: split into 2nd service
 
 	public List<ProfileToChampion> listChampions(Profile profile) {
 		return profileToChampionRepository.findAllByProfile(profile);
 	}
 
-	public List<ProfileToChampion> listChampionsByRole(int id, Role role) {
-		return profileToChampionRepository.findAllByProfileAndRole(em.getReference(Profile.class, id), role);
-	}
-
-	public ProfileToChampion addChampion(Profile profile, Champion champion, Role role) {
+	public void addChampion(Profile profile, Champion champion, Role role) {
 		ProfileToChampion profileToChampion = new ProfileToChampion();
 		profileToChampion.setProfile(profile);
 		profileToChampion.setChampion(champion);
 		profileToChampion.setRole(role);
 
-		return profileToChampionRepository.save(profileToChampion);
+		profileToChampionRepository.save(profileToChampion);
 	}
 
-	public ProfileToChampion addChampion(int profileId, int championId, Role role) {
-		ProfileToChampion profileToChampion = new ProfileToChampion();
-		profileToChampion.setProfile(em.getReference(Profile.class, profileId));
-		profileToChampion.setChampion(em.getReference(Champion.class, championId));
-		profileToChampion.setRole(role);
+	public Optional<ProfileToChampion> addChampion(int profileId, ProfileToChampion profileToChampion) {
+		Champion champion = em.find(Champion.class, profileToChampion.getChampion().getId());
+		return get(profileId).filter(profile -> champion != null).map(profile -> {
+			profileToChampion.setProfile(profile);
+			profileToChampion.setChampion(champion);
+			profileToChampionRepository.save(profileToChampion);
+			return profileToChampion;
+		});
+	}
 
-		return profileToChampionRepository.save(profileToChampion);
+	public void removeChampion(Profile profile, ProfileToChampion profileToChampion) {
+		getChampion(profile, profileToChampion).ifPresent(profileToChampionRepository::delete);
 	}
 
 	public ProfileToChampion getRandomChampion(int id, Role role) {
-		List<ProfileToChampion> champions = profileToChampionRepository.findRandomByProfileIdAndRole(id, role);
+		List<ProfileToChampion> champions = profileToChampionRepository.findAllByProfileAndRole(id, role);
 		return Random.collectionElement(champions);
+	}
+
+	private Optional<ProfileToChampion> getChampion(Profile profile, ProfileToChampion profileToChampion) {
+		return Optional.ofNullable(em.find(Champion.class, profileToChampion.getChampion().getId()))
+				.flatMap(champion -> profileToChampionRepository.findByProfileAndChampionAndRole(profile, champion,
+						profileToChampion.getRole()));
 	}
 
 }

@@ -11,6 +11,9 @@ public class ChampionSerializer {
 
 	public static ChampionDto base(Champion champion) {
 		ChampionDto championDto = new ChampionDto();
+		if (champion == null)
+			return championDto;
+
 		championDto.setId(champion.getId());
 		championDto.setKey(champion.getKey());
 		championDto.setName(Optional.ofNullable(champion.getDisplayName()).orElse(champion.getName()));
