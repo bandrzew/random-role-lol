@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.random.role.lol.champion.dto.RoleToChampionDto;
 import com.random.role.lol.champion.model.Role;
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
@@ -12,6 +13,7 @@ import java.util.Map;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class DrawResultDto implements Serializable {
 
+	@Serial
 	private static final long serialVersionUID = -4808520527025183649L;
 
 	private ProfileDto profile;

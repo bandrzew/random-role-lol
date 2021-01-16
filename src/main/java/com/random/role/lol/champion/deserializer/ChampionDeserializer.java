@@ -12,8 +12,7 @@ public class ChampionDeserializer {
 			return champion;
 
 		Optional.ofNullable(championDto.getId()).ifPresent(champion::setId);
-		champion.setKey(championDto.getKey());
-		champion.setKey(championDto.getKey());
+		Optional.ofNullable(championDto.getKey()).ifPresent(champion::setKey);
 
 		return champion;
 	}

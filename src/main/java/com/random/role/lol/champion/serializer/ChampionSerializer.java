@@ -16,7 +16,7 @@ public class ChampionSerializer {
 
 		championDto.setId(champion.getId());
 		championDto.setKey(champion.getKey());
-		championDto.setName(Optional.ofNullable(champion.getDisplayName()).orElse(champion.getName()));
+		championDto.setName(Optional.ofNullable(champion.getDisplayName()).orElseGet(champion::getName));
 
 		return championDto;
 	}

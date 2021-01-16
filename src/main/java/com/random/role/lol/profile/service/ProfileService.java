@@ -90,13 +90,14 @@ public class ProfileService {
 		return get(profileId).filter(profile -> champion != null).map(profile -> {
 			profileToChampion.setProfile(profile);
 			profileToChampion.setChampion(champion);
-			profileToChampionRepository.save(profileToChampion);
+			//TODO: throw an error if profileToChampion already exists
+			getChampion(profileToChampion).orElseGet(() -> profileToChampionRepository.save(profileToChampion));
 			return profileToChampion;
 		});
 	}
 
-	public void removeChampion(Profile profile, ProfileToChampion profileToChampion) {
-		getChampion(profile, profileToChampion).ifPresent(profileToChampionRepository::delete);
+	public void removeChampion(ProfileToChampion profileToChampion) {
+		getChampion(profileToChampion).ifPresent(profileToChampionRepository::delete);
 	}
 
 	public ProfileToChampion getRandomChampion(int id, Role role) {
@@ -104,9 +105,9 @@ public class ProfileService {
 		return Random.collectionElement(champions);
 	}
 
-	private Optional<ProfileToChampion> getChampion(Profile profile, ProfileToChampion profileToChampion) {
+	private Optional<ProfileToChampion> getChampion(ProfileToChampion profileToChampion) {
 		return Optional.ofNullable(em.find(Champion.class, profileToChampion.getChampion().getId()))
-				.flatMap(champion -> profileToChampionRepository.findByProfileAndChampionAndRole(profile, champion,
+				.flatMap(champion -> profileToChampionRepository.findByProfileAndChampionAndRole(profileToChampion.getProfile(), champion,
 						profileToChampion.getRole()));
 	}
 

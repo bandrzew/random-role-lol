@@ -2,8 +2,6 @@ package com.random.role.lol.ddragon.client;
 
 import com.random.role.lol.common.client.Client;
 import com.random.role.lol.ddragon.resource.DdragonResource;
-import javax.annotation.PostConstruct;
-import javax.annotation.PreDestroy;
 import org.jboss.resteasy.client.jaxrs.ResteasyWebTarget;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
