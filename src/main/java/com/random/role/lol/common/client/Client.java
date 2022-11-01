@@ -1,15 +1,12 @@
 package com.random.role.lol.common.client;
 
-import java.util.concurrent.TimeUnit;
-import javax.annotation.PostConstruct;
-import javax.annotation.PreDestroy;
-import javax.ws.rs.client.ClientBuilder;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClientBuilder;
 import org.jboss.resteasy.client.jaxrs.ResteasyClient;
 import org.jboss.resteasy.client.jaxrs.ResteasyClientBuilder;
-import org.jboss.resteasy.client.jaxrs.engines.ApacheHttpClient43Engine;
 import org.springframework.beans.factory.annotation.Value;
+
+import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
+import java.util.concurrent.TimeUnit;
 
 public abstract class Client {
 
@@ -23,11 +20,10 @@ public abstract class Client {
 
 	@PostConstruct
 	public void init() {
-		CloseableHttpClient httpClient = HttpClientBuilder.create().setMaxConnPerRoute(20).setMaxConnTotal(100).build();
-		ApacheHttpClient43Engine engine = new ApacheHttpClient43Engine(httpClient);
-		client = ((ResteasyClientBuilder) ClientBuilder.newBuilder()).httpEngine(engine)
-				.connectTimeout(this.connectTimeout, TimeUnit.MILLISECONDS)
-				.readTimeout(this.readTimeout, TimeUnit.MILLISECONDS)
+		client = ((ResteasyClientBuilder) ResteasyClientBuilder.newBuilder()).connectionPoolSize(1000)
+				.maxPooledPerRoute(500)
+				.readTimeout(readTimeout, TimeUnit.MILLISECONDS)
+				.connectTimeout(connectTimeout, TimeUnit.MILLISECONDS)
 				.build();
 	}
 

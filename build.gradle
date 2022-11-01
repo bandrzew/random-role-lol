@@ -1,12 +1,14 @@
 plugins {
-	id 'org.springframework.boot' version '2.3.1.RELEASE'
-	id 'io.spring.dependency-management' version '1.0.9.RELEASE'
+	id 'org.springframework.boot' version '2.7.5'
+	id 'io.spring.dependency-management' version '1.0.15.RELEASE'
 	id 'java'
+	id 'idea'
 }
 
 group = 'com.random.role'
 version = '0.0.1-SNAPSHOT'
-sourceCompatibility = '14'
+sourceCompatibility = '17'
+targetCompatibility = '17'
 
 repositories {
 	mavenCentral()
@@ -15,12 +17,12 @@ repositories {
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
-	implementation 'org.jboss.resteasy:resteasy-client:4.5.5.Final'
-	implementation 'org.jboss.resteasy:resteasy-jackson2-provider:4.5.5.Final'
-	implementation 'org.jboss.resteasy:resteasy-jaxb-provider:4.5.5.Final'
+	implementation 'org.jboss.resteasy:resteasy-client:4.7.2.Final' //TODO upgrade to 6.2.1.Final
+	implementation 'org.jboss.resteasy:resteasy-jackson2-provider:6.2.1.Final'
+	implementation 'org.jboss.resteasy:resteasy-jaxb-provider:6.2.1.Final'
 
-	compileOnly 'com.fasterxml.jackson.core:jackson-annotations:2.11.0'
-	compileOnly 'org.hibernate:hibernate-validator:6.1.5.Final'
+	compileOnly 'com.fasterxml.jackson.core:jackson-annotations:2.13.4'
+	compileOnly 'org.hibernate:hibernate-validator:8.0.0.Final'
 
 	runtimeOnly 'org.postgresql:postgresql'
 
