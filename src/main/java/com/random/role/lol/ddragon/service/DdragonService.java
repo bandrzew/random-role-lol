@@ -19,6 +19,7 @@ import java.util.Optional;
 import java.util.Set;
 import org.apache.logging.log4j.util.Strings;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -37,6 +38,7 @@ public class DdragonService {
 		this.profileService = profileService;
 	}
 
+	@Async
 	public void importChampions() {
 		SpecialProfile allChampionsProfile = profileService.getSpecial(ProfileType.ALL_CHAMPIONS).orElseGet(this::createSpecialProfile);
 		Set<Integer> existingChampionIds = profileService.listChampions(allChampionsProfile)

@@ -42,9 +42,8 @@ public class ChampionController {
 	}
 
 	@PostMapping("/import")
-	public ResponseEntity<ChampionDto> importChampions() {
+	public void importChampions() {
 		ddragonService.importChampions();
-		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 	}
 
 }
