@@ -22,10 +22,10 @@ dependencies {
 	implementation 'org.jboss.resteasy:resteasy-jackson2-provider:5.0.2.Final'
 	implementation 'org.jboss.resteasy:resteasy-jaxb-provider:5.0.2.Final'
 
+	implementation 'com.mysql:mysql-connector-j:8.0.32'
+
 	compileOnly 'com.fasterxml.jackson.core:jackson-annotations:2.13.4'
 	compileOnly 'org.hibernate:hibernate-validator:8.0.0.Final'
-
-	runtimeOnly 'org.postgresql:postgresql'
 
 	testRuntimeOnly 'com.h2database:h2'
 

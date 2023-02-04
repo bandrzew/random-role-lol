@@ -23,7 +23,7 @@ public class Champion {
 
 	private String displayName;
 
-	@Column(nullable = false)
+	@Column(name = "\"key\"", nullable = false)
 	private int key;
 
 	@OneToMany(mappedBy = "champion", fetch = FetchType.LAZY)
