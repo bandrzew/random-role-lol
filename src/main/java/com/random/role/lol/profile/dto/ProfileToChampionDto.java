@@ -6,7 +6,7 @@ import com.random.role.lol.champion.dto.ChampionDto;
 import com.random.role.lol.champion.model.Role;
 import java.io.Serial;
 import java.io.Serializable;
-import javax.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotNull;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)

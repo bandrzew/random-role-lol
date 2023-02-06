@@ -2,7 +2,7 @@ package com.random.role.lol;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-import javax.persistence.EntityManager;
+import jakarta.persistence.EntityManager;
 import javax.sql.DataSource;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

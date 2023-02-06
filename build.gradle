@@ -1,5 +1,5 @@
 plugins {
-	id 'org.springframework.boot' version '2.7.5'
+	id 'org.springframework.boot' version '3.0.2'
 	id 'io.spring.dependency-management' version '1.1.0'
 	id 'java'
 	id 'idea'
@@ -18,13 +18,13 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 
-	implementation 'org.jboss.resteasy:resteasy-client:5.0.2.Final'
-	implementation 'org.jboss.resteasy:resteasy-jackson2-provider:5.0.2.Final'
-	implementation 'org.jboss.resteasy:resteasy-jaxb-provider:5.0.2.Final'
+	implementation 'org.jboss.resteasy:resteasy-client:6.2.2.Final'
+	implementation 'org.jboss.resteasy:resteasy-jackson2-provider:6.2.2.Final'
+	implementation 'org.jboss.resteasy:resteasy-jaxb-provider:6.2.2.Final'
 
 	implementation 'com.mysql:mysql-connector-j:8.0.32'
 
-	compileOnly 'com.fasterxml.jackson.core:jackson-annotations:2.13.4'
+	compileOnly 'com.fasterxml.jackson.core:jackson-annotations:2.14.2'
 	compileOnly 'org.hibernate:hibernate-validator:8.0.0.Final'
 
 	testRuntimeOnly 'com.h2database:h2'

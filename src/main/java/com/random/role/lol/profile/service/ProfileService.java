@@ -12,8 +12,8 @@ import com.random.role.lol.profile.repository.ProfileToChampionRepository;
 import com.random.role.lol.profile.repository.SpecialProfileRepository;
 import java.util.List;
 import java.util.Optional;
-import javax.persistence.EntityManager;
-import javax.transaction.Transactional;
+import jakarta.persistence.EntityManager;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
