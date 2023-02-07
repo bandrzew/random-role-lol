@@ -17,6 +17,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.util.Strings;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
@@ -25,6 +28,8 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class DdragonService {
+
+	private final static Logger LOGGER = LogManager.getLogger(DdragonService.class);
 
 	private final ChampionRepository championRepository;
 
@@ -42,6 +47,7 @@ public class DdragonService {
 	@Async
 	@Scheduled(cron = "${champion.import.cron}")
 	public void importChampions() {
+		LOGGER.info("[DDRAGON] Started champion import");
 		SpecialProfile allChampionsProfile = profileService.getSpecial(ProfileType.ALL_CHAMPIONS).orElseGet(this::createSpecialProfile);
 		Set<Integer> existingChampionIds = profileService.listChampions(allChampionsProfile)
 				.stream()
@@ -56,6 +62,8 @@ public class DdragonService {
 				.map(this::updateChampion)
 				.filter(champion -> !existingChampionIds.contains(champion.getId()))
 				.forEach(champion -> Role.POSITIONS.forEach(role -> profileService.addChampion(allChampionsProfile, champion, role)));
+
+		LOGGER.info("[DDRAGON] Finished champion import");
 	}
 
 	private SpecialProfile createSpecialProfile() {
