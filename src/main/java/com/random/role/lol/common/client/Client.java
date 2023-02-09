@@ -1,8 +1,8 @@
 package com.random.role.lol.common.client;
 
-import java.util.concurrent.TimeUnit;
 import jakarta.annotation.PostConstruct;
 import jakarta.annotation.PreDestroy;
+import java.util.concurrent.TimeUnit;
 import org.jboss.resteasy.client.jaxrs.ResteasyClient;
 import org.jboss.resteasy.client.jaxrs.ResteasyClientBuilder;
 import org.springframework.beans.factory.annotation.Value;

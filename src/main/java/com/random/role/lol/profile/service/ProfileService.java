@@ -10,10 +10,10 @@ import com.random.role.lol.profile.model.SpecialProfile;
 import com.random.role.lol.profile.repository.ProfileRepository;
 import com.random.role.lol.profile.repository.ProfileToChampionRepository;
 import com.random.role.lol.profile.repository.SpecialProfileRepository;
-import java.util.List;
-import java.util.Optional;
 import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
+import java.util.List;
+import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
