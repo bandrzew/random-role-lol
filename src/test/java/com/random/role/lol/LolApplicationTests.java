@@ -18,7 +18,7 @@ class LolApplicationTests {
 
 	private final EntityManager entityManager;
 
-	
+	@Autowired
 	public LolApplicationTests(DataSource dataSource, JdbcTemplate jdbcTemplate, EntityManager entityManager) {
 		this.dataSource = dataSource;
 		this.jdbcTemplate = jdbcTemplate;

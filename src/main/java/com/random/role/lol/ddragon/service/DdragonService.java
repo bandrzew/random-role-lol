@@ -59,8 +59,7 @@ public class DdragonService {
 				.stream()
 				.map(ddragonEntry -> {
 					Champion champion = nameToChampion.get(ddragonEntry.getKey());
-					updateChampion(champion, ddragonEntry.getValue(), ddragonEntry.getKey());
-					return champion;
+					return updateChampion(champion, ddragonEntry.getValue(), ddragonEntry.getKey());
 				})
 				.filter(champion -> !nameToChampion.containsKey(champion.getName()))
 				.collect(Collectors.toList());
@@ -86,7 +85,7 @@ public class DdragonService {
 		return profileService.save(specialProfile);
 	}
 
-	private void updateChampion(Champion champion, DdragonChampionDto ddragonChampion, String name) {
+	private Champion updateChampion(Champion champion, DdragonChampionDto ddragonChampion, String name) {
 		boolean isNew = champion == null;
 		if (isNew) {
 			champion = new Champion();
@@ -99,6 +98,8 @@ public class DdragonService {
 
 		if (!isNew)
 			em.merge(champion);
+
+		return champion;
 	}
 
 	private String getMostRecentVersion() {
