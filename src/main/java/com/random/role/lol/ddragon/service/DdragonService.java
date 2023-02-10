@@ -22,7 +22,6 @@ import java.util.stream.Collectors;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.util.Strings;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -41,7 +40,6 @@ public class DdragonService {
 
 	private final EntityManager em;
 
-	@Autowired
 	public DdragonService(ChampionRepository championRepository, DdragonClient ddragonClient, ProfileService profileService,
 			EntityManager em) {
 		this.championRepository = championRepository;

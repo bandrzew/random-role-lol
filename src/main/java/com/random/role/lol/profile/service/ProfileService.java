@@ -1,5 +1,8 @@
 package com.random.role.lol.profile.service;
 
+import static java.util.Collections.singleton;
+
+import com.random.role.lol.champion.ChampionService;
 import com.random.role.lol.champion.model.Champion;
 import com.random.role.lol.champion.model.Role;
 import com.random.role.lol.common.randomizer.Random;
@@ -14,7 +17,6 @@ import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -23,16 +25,18 @@ public class ProfileService {
 
 	private final EntityManager em;
 
+	private final ChampionService championService;
+
 	private final ProfileRepository profileRepository;
 
 	private final SpecialProfileRepository specialProfileRepository;
 
 	private final ProfileToChampionRepository profileToChampionRepository;
 
-	@Autowired
-	public ProfileService(EntityManager em, ProfileRepository profileRepository, SpecialProfileRepository specialProfileRepository,
-			ProfileToChampionRepository profileToChampionRepository) {
+	public ProfileService(EntityManager em, ChampionService championService, ProfileRepository profileRepository,
+			SpecialProfileRepository specialProfileRepository, ProfileToChampionRepository profileToChampionRepository) {
 		this.em = em;
+		this.championService = championService;
 		this.profileRepository = profileRepository;
 		this.specialProfileRepository = specialProfileRepository;
 		this.profileToChampionRepository = profileToChampionRepository;
@@ -73,7 +77,10 @@ public class ProfileService {
 	// TODO: split into 2nd service
 
 	public List<ProfileToChampion> listChampions(Profile profile) {
-		return profileToChampionRepository.findAllByProfile(profile);
+		List<ProfileToChampion> profileChampions = profileToChampionRepository.findAllByProfile(profile);
+		championService.fetchChampions(profileChampions);
+
+		return profileChampions;
 	}
 
 	public void addChampion(Profile profile, Champion champion, Role role) {
@@ -102,7 +109,10 @@ public class ProfileService {
 
 	public ProfileToChampion getRandomChampion(int id, Role role) {
 		List<ProfileToChampion> champions = profileToChampionRepository.findAllByProfileAndRole(id, role);
-		return Random.collectionElement(champions);
+		ProfileToChampion randomChampion = Random.collectionElement(champions);
+		championService.fetchChampions(singleton(randomChampion));
+
+		return randomChampion;
 	}
 
 	private Optional<ProfileToChampion> getChampion(ProfileToChampion profileToChampion) {

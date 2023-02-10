@@ -27,7 +27,6 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -46,7 +45,6 @@ public class ProfileController {
 
 	private final ProfileService profileService;
 
-	@Autowired
 	public ProfileController(ProfileService profileService) {
 		this.profileService = profileService;
 	}
