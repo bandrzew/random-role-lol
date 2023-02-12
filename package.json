@@ -1,0 +1,10 @@
+{
+    "name": "lol",
+    "scripts": {
+        "lint": "echo 'missing lint script'",
+        "test": "echo 'missing test script'",
+        "clean": "echo 'missing clean script'",
+        "build": "echo 'missing build script'",
+        "watch": "echo 'missing watch script'"
+    }
+}

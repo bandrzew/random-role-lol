@@ -3,6 +3,7 @@ plugins {
 	id 'io.spring.dependency-management' version '1.1.0'
 	id 'java'
 	id 'idea'
+	id 'com.coditory.webjar' version '1.3.1'
 }
 
 group = 'com.random.role'
@@ -29,6 +30,10 @@ dependencies {
 	implementation 'org.jboss.resteasy:resteasy-jackson2-provider:6.2.2.Final'
 	implementation 'org.jboss.resteasy:resteasy-jaxb-provider:6.2.2.Final'
 	implementation 'org.hibernate:hibernate-validator:8.0.0.Final'
+
+	implementation 'org.webjars:bootstrap:5.2.3'
+	implementation 'org.webjars.npm:popperjs__core:2.11.6'
+	implementation 'org.webjars:webjars-locator-core:0.52'
 
 	implementation 'com.mysql:mysql-connector-j:8.0.32'
 

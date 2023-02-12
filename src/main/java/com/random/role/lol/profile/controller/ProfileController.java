@@ -40,7 +40,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping(path = "/profiles")
+@RequestMapping(path = "api/profiles")
 public class ProfileController {
 
 	private final ProfileService profileService;

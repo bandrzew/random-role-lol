@@ -5,6 +5,8 @@ build/
 src/main/resources/application.properties
 !**/src/main/java/**
 !**/src/test/**
+.node/
+node_modules/
 
 ### IntelliJ IDEA ###
 .idea
