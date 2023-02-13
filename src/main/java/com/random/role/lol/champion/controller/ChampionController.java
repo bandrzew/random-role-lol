@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping(path = "api/champions")
+@RequestMapping(path = "/champions")
 public class ChampionController {
 
 	private final ChampionRepository championRepository;
@@ -38,7 +38,7 @@ public class ChampionController {
 		return championRepository.findById(id).map(ChampionSerializer::base).map(ResponseMapper::ok).orElseGet(ResponseMapper::notFound);
 	}
 
-	@PostMapping("import")
+	@PostMapping("/import")
 	public void importChampions() {
 		ddragonService.importChampions();
 	}
