@@ -2,7 +2,7 @@ HELP.md
 .gradle
 build/
 !gradle/wrapper/gradle-wrapper.jar
-src/main/resources/application.properties
+random-role-api/src/main/resources/application.properties
 !**/src/main/java/**
 !**/src/test/**
 
