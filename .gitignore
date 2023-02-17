@@ -3,6 +3,7 @@ HELP.md
 build/
 !gradle/wrapper/gradle-wrapper.jar
 random-role-api/src/main/resources/application.properties
+random-role-gui/node_modules/
 !**/src/main/java/**
 !**/src/test/**
 
