@@ -2,7 +2,7 @@ package com.random.role.lol.profile.service;
 
 import static java.util.Collections.singleton;
 
-import com.random.role.lol.champion.ChampionService;
+import com.random.role.lol.champion.service.ChampionService;
 import com.random.role.lol.champion.model.Champion;
 import com.random.role.lol.champion.model.Role;
 import com.random.role.lol.common.randomizer.Random;
