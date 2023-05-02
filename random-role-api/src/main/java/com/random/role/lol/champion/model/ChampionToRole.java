@@ -11,7 +11,11 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import lombok.Getter;
+import lombok.Setter;
 
+@Getter
+@Setter
 @Entity
 @Table(name = "champion_to_role")
 public class ChampionToRole {
@@ -34,45 +38,5 @@ public class ChampionToRole {
 	@Enumerated(EnumType.STRING)
 	@Column(nullable = false)
 	private Tier tier;
-
-	public int getId() {
-		return id;
-	}
-
-	public void setId(int id) {
-		this.id = id;
-	}
-
-	public Champion getChampion() {
-		return champion;
-	}
-
-	public void setChampion(Champion champion) {
-		this.champion = champion;
-	}
-
-	public Role getRole() {
-		return role;
-	}
-
-	public void setRole(Role role) {
-		this.role = role;
-	}
-
-	public int getWinRate() {
-		return winRate;
-	}
-
-	public void setWinRate(int winRate) {
-		this.winRate = winRate;
-	}
-
-	public Tier getTier() {
-		return tier;
-	}
-
-	public void setTier(Tier tier) {
-		this.tier = tier;
-	}
 
 }
