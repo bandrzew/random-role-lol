@@ -25,6 +25,7 @@ import com.random.role.lol.ddragon.dto.DdragonChampionDto;
 import com.random.role.lol.ddragon.resource.DdragonResource;
 import com.random.role.lol.profile.model.ProfileType;
 import com.random.role.lol.profile.model.SpecialProfile;
+import com.random.role.lol.profile.service.ProfileChampionService;
 import com.random.role.lol.profile.service.ProfileService;
 
 import jakarta.persistence.EntityManager;
@@ -42,13 +43,16 @@ public class DdragonService {
 
 	private final ProfileService profileService;
 
+	private final ProfileChampionService profileChampionService;
+
 	private final EntityManager em;
 
 	public DdragonService(ChampionRepository championRepository, DdragonClient ddragonClient, ProfileService profileService,
-			EntityManager em) {
+			ProfileChampionService profileChampionService, EntityManager em) {
 		this.championRepository = championRepository;
 		this.ddragonResource = ddragonClient.getDdragonResource();
 		this.profileService = profileService;
+		this.profileChampionService = profileChampionService;
 		this.em = em;
 	}
 
@@ -78,7 +82,7 @@ public class DdragonService {
 
 		SpecialProfile allChampionsProfile = profileService.getSpecial(ProfileType.ALL_CHAMPIONS).orElseGet(this::createSpecialProfile);
 		createdChampions.forEach(
-				champion -> Role.POSITIONS.forEach(role -> profileService.addChampion(allChampionsProfile, champion, role)));
+				champion -> Role.POSITIONS.forEach(role -> profileChampionService.addChampion(allChampionsProfile, champion, role)));
 	}
 
 	private SpecialProfile createSpecialProfile() {
