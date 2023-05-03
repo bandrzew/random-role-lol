@@ -2,10 +2,9 @@ package com.random.role.lol.profile.controller;
 
 import static java.util.Collections.singletonMap;
 import static java.util.stream.Collectors.groupingBy;
+import static java.util.stream.Collectors.mapping;
 import static java.util.stream.Collectors.toList;
-import static java.util.stream.Collectors.toMap;
 
-import java.util.AbstractMap;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -55,18 +54,12 @@ public class ProfileChampionController {
 
 	@GetMapping
 	public Map<Role, List<ChampionDto>> listChampions(@PathVariable("id") int id) {
-		// TODO REFACTOR: groupingBy with value mapper (?)
 		return profileService.get(id)
 				.map(profileChampionService::listChampions)
 				.orElseGet(Collections::emptyList)
 				.stream()
 				.map(ProfileSerializer::fromProfileToChampion)
-				.collect(groupingBy(ProfileToChampionDto::getRole))
-				.entrySet()
-				.stream()
-				.map(entry -> new AbstractMap.SimpleEntry<>(entry.getKey(),
-						entry.getValue().stream().map(ProfileToChampionDto::getChampion).collect(toList())))
-				.collect(toMap(Map.Entry::getKey, Map.Entry::getValue));
+				.collect(groupingBy(ProfileToChampionDto::getRole, mapping(ProfileToChampionDto::getChampion, toList())));
 	}
 
 	@PutMapping
