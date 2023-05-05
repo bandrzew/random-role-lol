@@ -42,12 +42,12 @@ public class ProfileController {
 		return profileService.get(id).map(ProfileSerializer::fromProfile).map(ResponseMapper::ok).orElseGet(ResponseMapper::notFound);
 	}
 
-	@PutMapping
+	@PostMapping
 	public ProfileDto create(@RequestBody ProfileDto profileDto) {
 		return ProfileSerializer.fromProfile(profileService.create(profileDto.getName()));
 	}
 
-	@PostMapping("{id}")
+	@PutMapping("{id}")
 	public ResponseEntity<ProfileDto> edit(@PathVariable("id") int id, @RequestBody ProfileDto profileDto) {
 		return profileService.get(id).flatMap(profile -> {
 			if (profile.isRemovalRestricted())

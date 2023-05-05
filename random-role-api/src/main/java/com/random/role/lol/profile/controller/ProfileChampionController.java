@@ -17,7 +17,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -33,7 +33,6 @@ import com.random.role.lol.profile.deserializer.ProfileDeserializer;
 import com.random.role.lol.profile.dto.DrawResultDto;
 import com.random.role.lol.profile.dto.ProfileToChampionDto;
 import com.random.role.lol.profile.model.Profile;
-import com.random.role.lol.profile.model.ProfileToChampion;
 import com.random.role.lol.profile.serializer.ProfileSerializer;
 import com.random.role.lol.profile.service.ProfileChampionService;
 import com.random.role.lol.profile.service.ProfileService;
@@ -41,7 +40,7 @@ import com.random.role.lol.profile.service.ProfileService;
 import jakarta.validation.Valid;
 
 @RestController
-@RequestMapping(path = "/profiles/{id}/champions")
+@RequestMapping(path = "/profiles/{profileId}/champions")
 public class ProfileChampionController {
 
 	private final ProfileService profileService;
@@ -53,8 +52,8 @@ public class ProfileChampionController {
 	}
 
 	@GetMapping
-	public Map<Role, List<ChampionDto>> listChampions(@PathVariable("id") int id) {
-		return profileService.get(id)
+	public Map<Role, List<ChampionDto>> listChampions(@PathVariable("profileId") int profileId) {
+		return profileService.get(profileId)
 				.map(profileChampionService::listChampions)
 				.orElseGet(Collections::emptyList)
 				.stream()
@@ -62,45 +61,42 @@ public class ProfileChampionController {
 				.collect(groupingBy(ProfileToChampionDto::getRole, mapping(ProfileToChampionDto::getChampion, toList())));
 	}
 
-	@PutMapping
-	public ResponseEntity<ProfileToChampionDto> addChampion(@PathVariable int id,
+	@PostMapping
+	public ResponseEntity<ProfileToChampionDto> addChampion(@PathVariable("profileId") int profileId,
 			@RequestBody @Valid ProfileToChampionDto profileToChampionDto) {
-		return profileChampionService.addChampion(id, ProfileDeserializer.fromDto(profileToChampionDto))
+		return profileChampionService.addChampion(profileId, ProfileDeserializer.fromDto(profileToChampionDto))
 				.map(ProfileSerializer::fromProfileToChampion)
 				.map(ResponseMapper::noContent)
 				.orElseGet(ResponseMapper::notFound);
 	}
 
-	@DeleteMapping
-	public ResponseEntity<Object> removeChampion(@PathVariable int id, @RequestBody @Valid ProfileToChampionDto profileToChampionDto) {
-		return profileService.get(id).map(profile -> {
+	@DeleteMapping("{id}")
+	public ResponseEntity<Object> removeChampion(@PathVariable("profileId") int profileId, @PathVariable("id") int id, @RequestParam("role") Role role) {
+		return profileService.get(profileId).map(profile -> {
 			if (profile.isRemovalRestricted())
 				return HttpStatus.FORBIDDEN;
 
-			ProfileToChampion profileToChampion = ProfileDeserializer.fromDto(profileToChampionDto);
-			profileToChampion.setProfile(profile);
-			profileChampionService.removeChampion(profileToChampion);
-
+			profileChampionService.removeChampion(profileId, id, role);
 			return HttpStatus.NO_CONTENT;
 		}).map(ResponseEntity::new).orElseGet(ResponseMapper::notFound);
 	}
 
 	@GetMapping("random")
-	public DrawResultDto getRandom(@PathVariable int id, @RequestParam("roles") Set<Role> roles) {
+	public DrawResultDto getRandom(@PathVariable("profileId") int profileId, @RequestParam("roles") Set<Role> roles) {
 		DrawResultDto drawResultDto = new DrawResultDto();
-		Optional<Profile> profile = profileService.get(id);
+		Optional<Profile> profile = profileService.get(profileId);
 		if (profile.isEmpty())
 			return drawResultDto;
 
 		drawResultDto.setProfile(ProfileSerializer.fromProfile(profile.get()));
 
 		Role firstRole = Random.collectionElement(roles);
-		List<RoleToChampionDto> firstRoleChampions = getRoleToChampions(id, roles, firstRole, null);
+		List<RoleToChampionDto> firstRoleChampions = getRoleToChampions(profileId, roles, firstRole, null);
 		drawResultDto.setFirstRole(singletonMap(firstRole, firstRoleChampions));
 
 		if (roles.size() > 1 && firstRole != Role.FILL) {
 			Role secondRole = Random.collectionElement(roles, firstRole);
-			List<RoleToChampionDto> secondRoleChampions = getRoleToChampions(id, roles, secondRole, firstRole);
+			List<RoleToChampionDto> secondRoleChampions = getRoleToChampions(profileId, roles, secondRole, firstRole);
 			drawResultDto.setSecondRole(singletonMap(secondRole, secondRoleChampions));
 		}
 

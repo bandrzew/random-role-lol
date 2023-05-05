@@ -7,6 +7,7 @@ import com.random.role.lol.profile.model.ProfileToChampion;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 
 public interface ProfileToChampionRepository extends JpaRepository<ProfileToChampion, Integer> {
@@ -17,5 +18,8 @@ public interface ProfileToChampionRepository extends JpaRepository<ProfileToCham
 
 	@Query("SELECT p FROM ProfileToChampion p WHERE p.profile.id = ?1 AND p.role = ?2")
 	List<ProfileToChampion> findAllByProfileAndRole(int profileId, Role role);
+
+	@Modifying
+	void deleteByProfileIdAndChampionIdAndRole(int profileId, int championId, Role role);
 
 }

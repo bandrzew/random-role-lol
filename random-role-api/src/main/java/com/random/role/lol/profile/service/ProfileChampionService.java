@@ -13,11 +13,7 @@ import com.random.role.lol.champion.service.ChampionService;
 import com.random.role.lol.common.randomizer.Random;
 import com.random.role.lol.profile.model.Profile;
 import com.random.role.lol.profile.model.ProfileToChampion;
-import com.random.role.lol.profile.model.ProfileType;
-import com.random.role.lol.profile.model.SpecialProfile;
-import com.random.role.lol.profile.repository.ProfileRepository;
 import com.random.role.lol.profile.repository.ProfileToChampionRepository;
-import com.random.role.lol.profile.repository.SpecialProfileRepository;
 
 import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
@@ -63,14 +59,13 @@ public class ProfileChampionService {
 		return profileService.get(profileId).filter(profile -> champion != null).map(profile -> {
 			profileToChampion.setProfile(profile);
 			profileToChampion.setChampion(champion);
-			//TODO: throw an error if profileToChampion already exists
 			getChampion(profileToChampion).orElseGet(() -> profileToChampionRepository.save(profileToChampion));
 			return profileToChampion;
 		});
 	}
 
-	public void removeChampion(ProfileToChampion profileToChampion) {
-		getChampion(profileToChampion).ifPresent(profileToChampionRepository::delete);
+	public void removeChampion(int profileId, int championId, Role role) {
+		profileToChampionRepository.deleteByProfileIdAndChampionIdAndRole(profileId, championId, role);
 	}
 
 	public ProfileToChampion getRandomChampion(int id, Role role) {

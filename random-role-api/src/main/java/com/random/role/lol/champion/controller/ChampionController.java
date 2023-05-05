@@ -2,18 +2,20 @@ package com.random.role.lol.champion.controller;
 
 import static java.util.stream.Collectors.toList;
 
+import java.util.List;
+
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
 import com.random.role.lol.champion.dto.ChampionDto;
 import com.random.role.lol.champion.repository.ChampionRepository;
 import com.random.role.lol.champion.serializer.ChampionSerializer;
 import com.random.role.lol.common.response.ResponseMapper;
 import com.random.role.lol.ddragon.service.DdragonService;
-import java.util.List;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping(path = "/champions")
@@ -38,7 +40,7 @@ public class ChampionController {
 		return championRepository.findById(id).map(ChampionSerializer::base).map(ResponseMapper::ok).orElseGet(ResponseMapper::notFound);
 	}
 
-	@PostMapping("/import")
+	@PutMapping
 	public void importChampions() {
 		ddragonService.importChampions();
 	}
